@@ -23,16 +23,16 @@ Apuntes personales y material docente para la preparación del examen de certifi
 
 ## 📘 Learning Resources (Microsoft Learn)
 - **Protect identity and access in Azure**  
-  [Link al curso](https://learn.microsoft.com/training/paths/secure-identity-access/)
-
+  https://learn.microsoft.com/training/paths/secure-identity-access/
+  
 - **Protect network infrastructure in Azure**  
-  [Link al curso](https://learn.microsoft.com/training/paths/secure-networking/)
+  https://learn.microsoft.com/training/paths/secure-networking/
 
 - **Protect compute, storage, and databases**  
-  [Link al curso](https://learn.microsoft.com/training/paths/secure-compute-storage-databases/)
+  https://learn.microsoft.com/training/paths/secure-compute-storage-databases/
 
-- **Strengthen security posture using Microsoft Defender for Cloud and Microsoft Sentinel**  
-  [Link al curso](https://learn.microsoft.com/training/paths/secure-azure-using-microsoft-defender-cloud-sentinel/)
+- **Strengthen security posture using Microsoft Defender for Cloud and Microsoft Sentinel**
+  https://learn.microsoft.com/training/paths/secure-azure-using-microsoft-defender-cloud-sentinel/
 
 ---
 
