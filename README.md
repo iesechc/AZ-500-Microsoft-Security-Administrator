@@ -5,11 +5,10 @@ Apuntes personales y material docente para la preparación del examen de certifi
 ---
 
 ## 📂 Contenido & Notas
-- [01 – Manage Identity and Access](01-manage-identity-access/)
-- [02 – Secure Networking](02-secure-networking/)
-- [03 – Secure Compute, Storage, and Databases](03-secure-compute-storage-databases/)
-- [04 – Manage Security Operations](04-manage-security-operations/)
-- [Labs](labs/)
+- [01 – Manage Identity and Access](docs/01-identity-access.md)
+- [02 – Secure Networking](docs/02-networking.md)
+- [03 – Secure Compute, Storage, and Databases](docs/03-compute-storage-db.md)
+- [04 – Manage Security Operations](docs/04-security-operations.md)
 
 ---
 
