@@ -43,10 +43,10 @@ Apuntes personales y material docente para la preparación del examen de certifi
 
 ## 📝 Practice Exams
 - **Tutorials Dojo – AZ-500 Practice Exams:**  
-  [https://tutorialsdojo.com](https://tutorialsdojo.com)
-
+  https://portal.tutorialsdojo.com/courses/az-500-microsoft-azure-security-engineer-associate-practice-exams/
+  
 ---
 
-## 🏗️ Azure Architecture Center (Security)
+## 🏗️ Microsoft cloud security benchmark documentation
 - **Azure Security Architecture Design:**  
-  [https://microsoft.com](https://microsoft.com)
+  https://learn.microsoft.com/en-us/security/benchmark/azure/
