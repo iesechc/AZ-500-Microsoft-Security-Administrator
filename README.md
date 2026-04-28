@@ -4,15 +4,7 @@ Apuntes personales y material docente para la preparación del examen de certifi
 
 ---
 
-## 📌 Progreso
-- [ ] Protect identity and access in Azure
-- [ ] Protect network infrastructure in Azure
-- [ ] Protect compute, storage, and databases
-- [ ] Strengthen security posture (Defender & Sentinel)
-
----
-
-## 📂 Contenido
+## 📂 Contenido & Notas
 - [01 – Manage Identity and Access](01-manage-identity-access/)
 - [02 – Secure Networking](02-secure-networking/)
 - [03 – Secure Compute, Storage, and Databases](03-secure-compute-storage-databases/)
