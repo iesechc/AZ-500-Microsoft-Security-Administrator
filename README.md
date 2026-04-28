@@ -1,12 +1,14 @@
-Apuntes personales y material docente para el examen **AZ-500 – Microsoft Azure Security Engineer**.
+# AZ-500 – Microsoft Azure Security Engineer
+
+Apuntes personales y material docente para la preparación del examen de certificación.
 
 ---
 
 ## 📌 Progreso
-- [ ] Manage Identity and Access
-- [ ] Secure Networking
-- [ ] Secure Compute, Storage, and Databases
-- [ ] Manage Security Operations
+- [ ] Protect identity and access in Azure
+- [ ] Protect network infrastructure in Azure
+- [ ] Protect compute, storage, and databases
+- [ ] Strengthen security posture (Defender & Sentinel)
 
 ---
 
@@ -19,30 +21,32 @@ Apuntes personales y material docente para el examen **AZ-500 – Microsoft Azur
 
 ---
 
-## 🧪 Labs (Práctica)
-- **Microsoft Learn AZ-500 Labs (oficiales):**  
-  https://github.io
+## 📘 Learning Resources (Microsoft Learn)
+- **Protect identity and access in Azure**  
+  [Link al curso](https://learn.microsoft.com/training/paths/secure-identity-access/)
 
-- **Azure Security Interactive Guides:**  
-  https://microsoft.com
+- **Protect network infrastructure in Azure**  
+  [Link al curso](https://learn.microsoft.com/training/paths/secure-networking/)
+
+- **Protect compute, storage, and databases**  
+  [Link al curso](https://learn.microsoft.com/training/paths/secure-compute-storage-databases/)
+
+- **Strengthen security posture using Microsoft Defender for Cloud and Microsoft Sentinel**  
+  [Link al curso](https://learn.microsoft.com/training/paths/secure-azure-using-microsoft-defender-cloud-sentinel/)
 
 ---
 
-## 📘 Learning Resources – Docs
-- **Certification exam preparation by Azure:**  
-  https://microsoft.com
-
-- **Microsoft Cloud Security Benchmark:**  
-  https://microsoft.com
-
+## 🧪 Labs (Práctica)
+- **Microsoft Learn AZ-500 Labs (GitHub oficial):**  
+[https://microsoftlearning.github.io/AZ500-AzureSecurityTechnologies](https://microsoftlearning.github.io/AZ500-AzureSecurityTechnologies/)
 ---
 
 ## 📝 Practice Exams
 - **Tutorials Dojo – AZ-500 Practice Exams:**  
-  https://tutorialsdojo.com
+  [https://tutorialsdojo.com](https://tutorialsdojo.com)
 
 ---
 
 ## 🏗️ Azure Architecture Center (Security)
 - **Azure Security Architecture Design:**  
-  https://microsoft.com
+  [https://microsoft.com](https://microsoft.com)
