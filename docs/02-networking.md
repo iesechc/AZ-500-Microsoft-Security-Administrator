@@ -144,3 +144,6 @@ Protege contra:
 - Implementar WAF + DDoS
 - Aplicar mínimo privilegio
 - Monitorear tráfico continuamente
+
+- <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f73c0744-9017-4966-afba-9be68bac3bec" />
+
