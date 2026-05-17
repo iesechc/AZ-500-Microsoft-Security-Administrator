@@ -145,5 +145,12 @@ Protege contra:
 - Aplicar mínimo privilegio
 - Monitorear tráfico continuamente
 
+# Controles de Seguridad Generales (MCSB)
+
 - <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f73c0744-9017-4966-afba-9be68bac3bec" />
+
+# Evaluación de grupos de Seguridad Azure
+
+<img width="1726" height="911" alt="image" src="https://github.com/user-attachments/assets/a4e085a3-3693-4529-86b9-1e7af9730996" />
+
 
