@@ -2,148 +2,108 @@
 
 ## Protección de Datos
 
-### Cifrado en tránsito
-- Usar HTTPS y TLS 1.2 o superior.
-- Habilitar **Secure Transfer** en Azure Storage.
-- Administración remota segura:
-  - Linux → SSH
-  - Windows → RDP/TLS
-- Usar SFTP/FTPS en lugar de FTP.
+### Cifrado en Tránsito
+Para garantizar la confidencialidad e integridad de la información mientras viaja por la red, es fundamental implementar protocolos modernos como HTTPS respaldados por TLS 1.2 o versiones superiores. En el ámbito del almacenamiento, se debe habilitar obligatoriamente la opción de transferencia segura (Secure Transfer) en todas las cuentas de Azure Storage. 
 
-### Buenas prácticas
-- Evitar protocolos inseguros.
-- Azure ya cifra tráfico entre datacenters automáticamente.
+Para las tareas de administración remota, el acceso a sistemas operativos Linux se debe realizar exclusivamente mediante SSH, mientras que los entornos Windows deben gestionarse a través de RDP protegido con TLS. Asimismo, para la transferencia de archivos se deben sustituir los esquemas tradicionales por soluciones cifradas como SFTP o FTPS en lugar del protocolo FTP estándar.
+
+### Buenas Prácticas de Cifrado
+La premisa fundamental consiste en erradicar por completo el uso de protocolos inseguros o legados dentro de la infraestructura. Como capa de protección adicional y transparente, Azure cifra de forma automática y nativa todo el tráfico de datos que se desplaza entre sus distintos centros de datos, asegurando el perímetro físico de la nube de Microsoft.
 
 ---
 
-# Logging y Monitoreo
+## Logging y Monitoreo
 
-## Registros importantes
-- NSG Flow Logs
-- Azure Firewall Logs
-- WAF Logs
-- DNS Logs
+### Registros Importantes
+La visibilidad es un pilar crítico en la estrategia de seguridad. Por ello, es necesario recolectar y centralizar registros clave, entre los que destacan los NSG Flow Logs para el análisis de flujos de red, los registros detallados de Azure Firewall, las auditorías de eventos del Web Application Firewall (WAF) y los logs de consultas de DNS.
 
-## Herramientas
-- Azure Monitor
-- Log Analytics
-- Microsoft Sentinel
-- Traffic Analytics
+### Herramientas de Monitoreo
+La plataforma ofrece un ecosistema integrado para la gestión de eventos. Azure Monitor actúa como el recolector base, mientras que los espacios de trabajo de Log Analytics permiten procesar y consultar grandes volúmenes de datos. Para capacidades avanzadas de correlación y respuesta automatizada ante incidentes (SIEM/SOAR), se utiliza Microsoft Sentinel, complementado con Traffic Analytics para obtener una visibilidad geomapeada y detallada del comportamiento de la red.
 
-## Objetivo
-- Detectar amenazas.
-- Investigar incidentes.
-- Generar alertas de seguridad.
+### Objetivos del Monitoreo
+El despliegue de estas herramientas persigue tres metas operativas claras: detectar amenazas potenciales en tiempo real, proporcionar datos forenses suficientes para investigar incidentes de seguridad y generar alertas automatizadas que permitan reaccionar antes de que ocurra un impacto crítico.
 
 ---
 
-# Seguridad de Red
+## Seguridad de Red
 
-## Segmentación de red
-- Crear VNets y Subnets.
-- Separar ambientes:
-  - Producción
-  - Desarrollo
-  - Administración
+### Segmentación de Red
+Una arquitectura de red segura se fundamenta en la división lógica del direccionamiento mediante la creación de redes virtuales (VNets) y subredes (Subnets). Es una regla estricta separar completamente los entornos según su propósito operativo, aislando los recursos de Producción, Desarrollo y Administración para evitar movimientos laterales no autorizados.
 
-## Controles de acceso
-- NSG → Filtrado por IP, puerto y protocolo.
-- ASG → Agrupar reglas de seguridad.
+### Controles de Acceso
+El control del tráfico a nivel de subred e interfaz de red se gestiona a través de los Network Security Groups (NSG), los cuales filtran los paquetes basándose en reglas de propiedad básicas como IP, puerto y protocolo. Para simplificar la administración de estas reglas y evitar el mantenimiento complejo de rangos de IPs estáticas, se utilizan los Application Security Groups (ASG), los cuales permiten agrupar máquinas virtuales bajo etiquetas lógicas de seguridad.
 
-## Recomendaciones
-- Aplicar:
-  - “Deny by default”
-  - “Allow by exception”
+### Recomendaciones de Acceso
+Toda política de red debe diseñarse bajo la filosofía de Confianza Cero (Zero Trust), aplicando el principio de denegación por defecto ("Deny by default") para todo el tráfico entrante y saliente, y permitiendo flujos de comunicación únicamente mediante excepciones explícitas y justificadas ("Allow by exception").
 
 ---
 
-# Acceso Privado
+## Acceso Privado
 
-## Azure Private Link
-- Acceso privado a servicios Azure.
-- Evita exposición a Internet.
+### Azure Private Link
+Este servicio permite establecer canales de comunicación privados hacia los servicios PaaS de Azure o servicios de terceros. Al utilizar Private Link, el tráfico se mantiene completamente dentro de la red troncal de Microsoft, evitando que los recursos expongan endpoints públicos a Internet y reduciendo drásticamente la superficie de ataque.
 
-## Buenas prácticas
-- Evitar IPs públicas directas en VMs.
-- Usar:
-  - Load Balancers
-  - Gateways
-  - Private Endpoints
+### Buenas Prácticas de Acceso
+Se debe evitar a toda costa la asignación de direcciones IP públicas directas a las máquinas virtuales. En su lugar, el diseño seguro exige canalizar el tráfico entrante y saliente a través de balanceadores de carga, puertas de enlace (Gateways) y Endpoints Privados (Private Endpoints).
 
 ---
 
-# Firewall y Protección
+## Firewall y Protección
 
-## Azure Firewall
-- Filtrado avanzado de tráfico.
-- Control centralizado de red.
+### Azure Firewall
+Este componente ofrece capacidades de filtrado avanzado de tráfico de capa 3 a capa 7, proporcionando a los administradores un control centralizado de las políticas de red y de aplicación a lo largo de múltiples suscripciones y redes virtuales.
 
-## WAF (Web Application Firewall)
-Servicios compatibles:
-- Application Gateway
-- Front Door
-- Azure CDN
+### Web Application Firewall (WAF)
+El WAF es un servicio especializado en la protección de aplicaciones web y APIs frente a vulnerabilidades comunes, como las descritas en el OWASP Top 10, y ataques automatizados de denegación de servicio. Este firewall se puede implementar de manera integrada en servicios de distribución como Application Gateway, Azure Front Door y Azure CDN.
 
-Protege contra:
-- OWASP Top 10
-- Ataques web y APIs
-
-## Protección DDoS
-- DDoS Basic → incluido por defecto.
-- DDoS Standard → protección avanzada Layer 7.
+### Protección DDoS
+Azure incluye por defecto el nivel DDoS Basic para proteger la infraestructura global contra ataques masivos de denegación de servicio. Para organizaciones que requieren un nivel de protección personalizado, el nivel DDoS Standard ofrece mitigación avanzada y sintonización de métricas en tiempo real enfocadas en la capa 7 del modelo OSI.
 
 ---
 
-# Protocolos Inseguros
+## Protocolos Inseguros
 
-## Detectar y deshabilitar
-- SSL/TLS v1
-- SMBv1
-- SSHv1
-- NTLMv1
+### Detectar y Deshabilitar
+Es un requisito de cumplimiento identificar y remover de la infraestructura cualquier rastro de protocolos obsoletos que comprometan la seguridad, tales como SSL en todas sus versiones, TLS v1.0 y v1.1, SMBv1, SSHv1 y el esquema de autenticación NTLMv1.
 
-## Herramienta recomendada
-- Microsoft Sentinel
+### Herramientas Recomendadas
+Para llevar a cabo un proceso de descubrimiento continuo y automatizado de estos protocolos vulnerables dentro del tráfico corporativo, se recomienda configurar directivas y libros de trabajo (Workbooks) específicos dentro de Microsoft Sentinel.
 
 ---
 
-# Conectividad Privada
+## Conectividad Privada
 
-## Opciones
-- Azure VPN
-- ExpressRoute
-- VNet Peering
+### Opciones de Conexión
+Para interconectar las oficinas o centros de datos locales con la nube, o comunicar redes internas de Azure entre sí, se dispone de tres mecanismos principales: Azure VPN para túneles cifrados sobre Internet, ExpressRoute para conexiones privadas dedicadas de alta velocidad que evitan la red pública, y VNet Peering para enlazar redes virtuales dentro de Azure con un rendimiento óptimo.
 
-## Objetivo
-- Mantener tráfico privado dentro de Azure.
+### Objetivo de la Conectividad
+El propósito central de estas tecnologías es asegurar que todo el tráfico operativo e institucional viaje exclusivamente por canales privados y seguros, sin tocar en ningún momento el direccionamiento público de Internet.
 
 ---
 
-# Servicios Azure Importantes
+## Servicios Azure Importantes
 
-| Servicio | Función |
-|---|---|
-| Azure Firewall | Firewall administrado |
-| NSG | Filtrado de red |
-| ASG | Agrupación de seguridad |
-| Private Link | Acceso privado |
-| Azure WAF | Protección web |
-| DDoS Protection | Mitigación DDoS |
-| Azure Monitor | Monitoreo |
-| Microsoft Sentinel | SIEM/SOAR |
-| ExpressRoute | Conexión privada |
+La siguiente matriz resume los componentes de seguridad esenciales y su rol dentro de la arquitectura de la nube:
+
+| Servicio | Función Principal |
+| :--- | :--- |
+| **Azure Firewall** | Sistema de filtrado perimetral administrado de capa 3 a 7. |
+| **NSG** | Control de acceso básico por IP, puerto y protocolo a nivel de red. |
+| **ASG** | Agrupamiento lógico de recursos para simplificar reglas de seguridad. |
+| **Private Link** | Conectividad privada a servicios PaaS evitando exposición pública. |
+| **Azure WAF** | Protección especializada para aplicaciones web contra el OWASP Top 10. |
+| **DDoS Protection** | Mitigación y defensa ante ataques masivos de denegación de servicio. |
+| **Azure Monitor** | Consolidación de métricas y visualización del estado de los recursos. |
+| **Microsoft Sentinel** | Plataforma centralizada de inteligencia (SIEM/SOAR) para respuesta a incidentes. |
+| **ExpressRoute** | Conexión física y dedicada desde el data center local hacia Azure. |
 
 ---
 
-# Buenas Prácticas Generales
+## Buenas Prácticas Generales
 
-- Usar TLS 1.2+
-- Centralizar logs
-- Deshabilitar protocolos inseguros
-- Evitar IPs públicas innecesarias
-- Implementar WAF + DDoS
-- Aplicar mínimo privilegio
-- Monitorear tráfico continuamente
+Para mantener una postura de seguridad robusta en Azure, es mandatorio forzar el uso de TLS 1.2 o superior en todas las conexiones y centralizar la recolección de logs para auditorías forenses. Asimismo, se deben deshabilitar de forma proactiva todos los protocolos inseguros de la infraestructura y eliminar el aprovisionamiento de IPs públicas que no sean estrictamente necesarias. 
+
+Finalmente, la estrategia de defensa en profundidad debe completarse mediante la implementación conjunta de soluciones WAF y protección DDoS, operando siempre bajo el principio del menor privilegio posible y manteniendo un monitoreo continuo del comportamiento del tráfico de red.
 
 # Controles de Seguridad Generales (MCSB)
 
