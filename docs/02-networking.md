@@ -153,301 +153,85 @@ Protege contra:
 
 <img width="1726" height="911" alt="image" src="https://github.com/user-attachments/assets/a4e085a3-3693-4529-86b9-1e7af9730996" />
 
+# Azure Firewall - Notas de Clase
 
-Azure Firewall - Notas de Clase
-Objetivos de Aprendizaje
+## Objetivos de Aprendizaje
+Al finalizar esta clase, el estudiante será capaz de comprender los fundamentos de Azure Firewall y su diferenciación clave frente a un Network Security Group (NSG). Asimismo, dominará los conceptos detrás de la arquitectura Hub-and-Spoke, los mecanismos de creación de reglas de red, aplicación y NAT, y la implementación práctica del servicio mediante Azure CLI, permitiéndole analizar escenarios avanzados de enrutamiento y seguridad en la nube.
 
-Al finalizar esta clase el estudiante será capaz de:
+## ¿Qué es Azure Firewall?
+Azure Firewall es un servicio de seguridad administrado por Microsoft diseñado específicamente para proteger los recursos desplegados dentro de la plataforma de Azure. Al operar bajo el modelo de Firewall-as-a-Service (FWaaS), la responsabilidad de la infraestructura, la escalabilidad y la alta disponibilidad recae completamente en Microsoft, liberando a los administradores de tareas operativas complejas.
 
-Comprender qué es Azure Firewall.
-Diferenciar Azure Firewall de un NSG (Network Security Group).
-Entender la arquitectura Hub-and-Spoke.
-Crear reglas de red, aplicación y NAT.
-Implementar Azure Firewall mediante Azure CLI.
-Analizar escenarios avanzados de enrutamiento y seguridad.
-¿Qué es Azure Firewall?
+<img width="827" height="562" alt="Esquema Azure Firewall" src="https://github.com/user-attachments/assets/1bf62401-a343-4982-968f-a4c3b435e64f" />
 
-Azure Firewall es un servicio de seguridad administrado por Microsoft que protege recursos desplegados en Azure.
+<img width="741" height="515" alt="Arquitectura de Red" src="https://github.com/user-attachments/assets/d1537cc6-ad24-406e-b678-346f99da5c3f" />
 
-Es un Firewall-as-a-Service (FWaaS), lo que significa que Microsoft administra la infraestructura, escalabilidad y alta disponibilidad.
+<img width="601" height="437" alt="Flujo de Seguridad" src="https://github.com/user-attachments/assets/fc0a68d7-2806-46c1-bd83-10d6b3cba6d9" />
 
-<img width="827" height="562" alt="image" src="https://github.com/user-attachments/assets/1bf62401-a343-4982-968f-a4c3b435e64f" />
+Este servicio opera de manera integral abarcando principalmente las capas 3, 4 y 7 del modelo OSI para garantizar una defensa en profundidad.
 
-<img width="741" height="515" alt="image" src="https://github.com/user-attachments/assets/d1537cc6-ad24-406e-b678-346f99da5c3f" />
+| Capa | Función |
+| :--- | :--- |
+| **L3** | Filtrado por dirección IP |
+| **L4** | Filtrado por puertos y protocolos |
+| **L7** | Filtrado por aplicaciones y dominios |
 
-<img width="601" height="437" alt="image" src="https://github.com/user-attachments/assets/fc0a68d7-2806-46c1-bd83-10d6b3cba6d9" />
+## ¿Por qué existe Azure Firewall?
+Imagine una organización que cuenta con un ecosistema tecnológico diverso compuesto por aplicaciones web, máquinas virtuales, bases de datos y múltiples servicios internos. Todos estos recursos críticos necesitan una protección robusta y constante contra accesos no autorizados, infecciones por malware, exfiltración de datos sensibles y la comunicación accidental o maliciosa con dominios comprometidos. Azure Firewall surge para solucionar esta necesidad al centralizar por completo el control y las políticas de seguridad perimetral de la red.
 
+## Características Principales
 
+### 1. Stateful Inspection
+El servicio cuenta con inspección de estado, lo que significa que el firewall recuerda el contexto de las conexiones activas. Si una máquina virtual inicia una petición hacia Internet, el firewall registra dicha sesión. Cuando la respuesta regresa desde Internet hacia la máquina virtual, el tráfico se permite de forma automática sin necesidad de crear una regla de entrada adicional, ya que el sistema reconoce que pertenece a una comunicación legítima previamente establecida.
 
-Azure Firewall opera principalmente en las capas 3, 4 y 7 del modelo OSI:
+### 2. Alta Disponibilidad
+La plataforma ofrece alta disponibilidad nativa directamente empaquetada en el servicio. Esto elimina por completo la necesidad de que los ingenieros configuren balanceadores de carga tradicionales, arquitecturas de clustering complejas o mantenimientos manuales costosos, puesto que Microsoft se encarga de garantizar la resiliencia del sistema de fondo.
 
-Capa	Función
-L3	Filtrado por IP
-L4	Filtrado por puertos y protocolos
-L7	Filtrado por aplicaciones y dominios
-¿Por qué existe Azure Firewall?
+### 3. Escalabilidad Automática
+El cortafuegos está diseñado para ser elástico, lo que le permite aumentar o disminuir sus recursos de cómputo y rendimiento de forma automatizada basándose en la carga de tráfico y las demandas en tiempo real de la organización.
 
-Supongamos que una organización tiene:
+### 4. Threat Intelligence
+Incorpora de forma nativa la inteligencia de amenazas de Microsoft, la cual se nutre de una base de datos global constantemente actualizada con direcciones IP sospechosas, dominios maliciosos e indicadores de compromiso conocidos. Gracias a esto, el firewall puede configurarse para alertar o bloquear de manera proactiva cualquier intento de comunicación con entes peligrosos.
 
-Aplicaciones Web
-Máquinas Virtuales
-Bases de Datos
-Servicios internos
+### 5. Registro y Monitoreo
+La observabilidad está totalmente cubierta mediante una integración nativa con el ecosistema de monitoreo de la nube, permitiendo enviar todos los registros de actividad hacia Azure Monitor, repositorios de Log Analytics y sistemas SIEM avanzados como Microsoft Sentinel.
 
-Todos estos recursos necesitan protección contra:
+## Azure Firewall vs Network Security Group (NSG)
 
-Accesos no autorizados
-Malware
-Exfiltración de datos
-Comunicación con dominios maliciosos
+Un Network Security Group (NSG) opera a un nivel más básico filtrando el tráfico de red únicamente mediante el análisis de la dirección IP, el puerto y el protocolo, careciendo de la capacidad para inspeccionar el contenido de la capa de aplicación. Por ejemplo, un NSG puede configurarse para permitir el puerto TCP 443, pero no tiene herramientas para discernir si ese tráfico legítimo se dirige hacia un sitio seguro como Google o GitHub, o si está viajando hacia un dominio de distribución de malware.
 
-Azure Firewall centraliza el control de seguridad.
+Por el contrario, Azure Firewall ofrece capacidades avanzadas capaces de inspeccionar a fondo dominios, aplicaciones y URLs completas. Utilizando el mismo escenario del puerto HTTPS 443, Azure Firewall permite establecer políticas granulares para autorizar explícitamente el acceso a herramientas corporativas como GitHub mientras bloquea de manera simultánea dominios maliciosos, a pesar de que ambos flujos utilicen exactamente el mismo puerto y protocolo.
 
-Características Principales
-1. Stateful Inspection
+## SKUs de Azure Firewall
 
-Azure Firewall recuerda el estado de las conexiones.
+El nivel **Basic** está diseñado específicamente para pequeñas empresas, entornos de laboratorio o escenarios de prueba que requieren funciones de protección esenciales sin incurrir en costos elevados.
 
-Ejemplo:
+El nivel **Standard** está pensado para entornos de producción generales e incluye capacidades robustas como filtrado por FQDN, Threat Intelligence integrado, traducciones de red DNAT, así como la gestión tradicional de reglas de red y de aplicación.
 
-VM → Internet
+El nivel **Premium** representa la máxima protección para entornos corporativos críticos, expandiendo las capacidades del nivel Standard al añadir inspección profunda de tráfico cifrado (TLS Inspection), sistemas de detección y prevención de intrusos (IDS/IPS), filtrado detallado de URL y herramientas de protección avanzada contra amenazas persistentes.
 
-Cuando la respuesta regresa:
+## Arquitectura Hub-and-Spoke
+Esta topología representa el modelo de diseño de red recomendado por Microsoft para organizar los recursos en la nube de forma segura y eficiente.
 
-Internet → VM
+La sección **Hub** actúa como la red central o zona de tránsito, y es el lugar idóneo donde se centralizan los servicios compartidos de seguridad y conectividad, albergando componentes críticos como Azure Firewall, VPN Gateways o circuitos de ExpressRoute.
 
-No es necesario crear una regla adicional porque el firewall conoce el estado de la sesión.
+Las secciones **Spokes** actúan como redes periféricas e independientes conectadas directamente al Hub. Estas zonas están destinadas a contener las cargas de trabajo de la organización, tales como aplicaciones específicas, componentes de bases de datos y máquinas virtuales.
 
-2. Alta Disponibilidad
+### Flujo de Tráfico
+El ciclo de vida de un paquete de datos comienza cuando una máquina virtual ubicada en un Spoke genera tráfico hacia el exterior. Inmediatamente, una ruta definida por el usuario (UDR) intercepta ese tráfico y lo redirige de manera forzada hacia el Hub. Una vez allí, Azure Firewall recibe los paquetes y realiza la inspección correspondiente según las políticas establecidas. Finalmente, el firewall toma la decisión de permitir o bloquear el paquete; si es aprobado, el tráfico continúa su curso hacia el destino final.
 
-No requiere:
+## ¿Qué es una UDR?
+Las User Defined Routes (UDR) son tablas de enrutamiento personalizadas que permiten a los administradores de red anular las rutas por defecto de Azure para definir manualmente el siguiente salto del tráfico. En un escenario sin UDR, una máquina virtual intentaría comunicarse directamente con Internet de manera desprotegida. Al implementar una UDR con una ruta hacia el destino general `0.0.0.0/0` especificando como siguiente salto (Next Hop) la dirección de Azure Firewall, se garantiza que todo el tráfico saliente sea canalizado obligatoriamente a través del dispositivo de seguridad antes de salir a la red pública.
 
-Balanceadores
-Clustering
-Configuración manual
+## Tipos de Reglas
 
-Microsoft administra automáticamente la disponibilidad.
+Las **NAT Rules** se utilizan principalmente para publicar servicios internos hacia el exterior, permitiendo que el tráfico proveniente de Internet llegue a la IP pública del firewall y este lo traduzca (DNAT) para redirigirlo de forma segura a un servidor web privado interno.
 
-3. Escalabilidad Automática
+Las **Network Rules** se enfocan en la seguridad a nivel de red, permitiendo filtrar las comunicaciones mediante la combinación de direcciones IP origen/destino, puertos específicos y protocolos de transporte, como por ejemplo, autorizar que una subred interna acceda al puerto TCP 443 de un destino específico.
 
-El servicio aumenta o disminuye recursos según la carga.
+Las **Application Rules** ofrecen un filtrado de alta granularidad basado en nombres de dominio completamente calificados (FQDN). Esto permite redactar reglas de negocio claras, como permitir la navegación saliente hacia un dominio de desarrollo y bloquear explícitamente redes sociales u otros sitios no productivos.
 
-4. Threat Intelligence
-
-Microsoft mantiene una base de datos global de:
-
-IPs maliciosas
-Dominios maliciosos
-Indicadores de compromiso
-
-El firewall puede:
-
-Alertar
-Bloquear
-
-automáticamente.
-
-5. Registro y Monitoreo
-
-Integración nativa con:
-
-Azure Monitor
-Log Analytics
-Microsoft Sentinel
-Azure Firewall vs NSG
-NSG
-
-Filtra tráfico usando:
-
-IP
-Puerto
-Protocolo
-
-No inspecciona aplicaciones.
-
-Ejemplo:
-
-Permitir TCP 443
-
-No sabe si el tráfico va hacia:
-
-google.com
-github.com
-malware.com
-Azure Firewall
-
-Puede inspeccionar:
-
-Dominios
-Aplicaciones
-URLs
-
-Ejemplo:
-
-Permitir:
-
-github.com
-
-Bloquear:
-
-malware-domain.com
-
-aunque ambos utilicen HTTPS 443.
-
-SKUs de Azure Firewall
-Basic
-
-Pensado para:
-
-Pequeñas empresas
-Laboratorios
-Entornos de prueba
-
-Funciones básicas.
-
-Standard
-
-Incluye:
-
-FQDN Filtering
-Threat Intelligence
-DNAT
-Network Rules
-Application Rules
-Premium
-
-Incluye todo lo anterior más:
-
-TLS Inspection
-IDS/IPS
-URL Filtering
-Protección avanzada
-Arquitectura Hub-and-Spoke
-
-Modelo recomendado por Microsoft.
-
-Hub
-
-Contiene:
-
-Azure Firewall
-VPN Gateway
-ExpressRoute
-Spokes
-
-Contienen:
-
-Aplicaciones
-Máquinas virtuales
-Servicios
-Flujo de Tráfico
-
-Paso 1
-
-VM en Spoke genera tráfico.
-
-↓
-
-Paso 2
-
-UDR redirige tráfico.
-
-↓
-
-Paso 3
-
-Azure Firewall inspecciona.
-
-↓
-
-Paso 4
-
-Firewall decide:
-
-Permitir
-Bloquear
-
-↓
-
-Paso 5
-
-Tráfico continúa.
-
-¿Qué es una UDR?
-
-UDR = User Defined Route
-
-Permite definir manualmente hacia dónde debe enviarse el tráfico.
-
-Ejemplo:
-
-Destino:
-0.0.0.0/0
-
-Next Hop:
-Azure Firewall
-
-Sin UDR:
-
-VM → Internet
-
-Con UDR:
-
-VM → Azure Firewall → Internet
-
-Tipos de Reglas
-1. NAT Rules
-
-Utilizadas para publicar servicios internos.
-
-Ejemplo:
-
-Internet → Firewall Public IP → Servidor Web
-
-2. Network Rules
-
-Filtran por:
-
-IP
-Puerto
-Protocolo
-
-Ejemplo:
-
-Permitir:
-
-10.0.1.0/24 → TCP 443
-
-3. Application Rules
-
-Filtran por:
-
-FQDN
-Dominio
-
-Ejemplo:
-
-Permitir:
-
-github.com
-
-Bloquear:
-
-facebook.com
-
-Orden de Evaluación
-
-Azure Firewall evalúa:
-
-NAT Rules
-Network Rules
-Application Rules
-
-Si ninguna coincide:
-
-DENY IMPLÍCITO
-
-Todo tráfico es bloqueado.
+## Orden de Evaluación
+Para procesar el tráfico entrante y saliente, Azure Firewall sigue un orden estrictamente jerárquico. Primero se evalúan las reglas de tipo NAT; si no hay ninguna coincidencia, se procede a verificar las reglas de Red (Network Rules); por último, se revisan las reglas de Aplicación (Application Rules). Si el tráfico analizado no coincide con ninguna de las reglas explícitamente creadas en los tres niveles anteriores, se aplica un **Deny Implícito**, lo que significa que todo tráfico no autorizado explícitamente es bloqueado por defecto.
 
 ¿Cuál es la diferencia principal entre Azure Firewall y NSG?
 ¿Por qué son necesarias las UDR en una arquitectura Hub-and-Spoke?
