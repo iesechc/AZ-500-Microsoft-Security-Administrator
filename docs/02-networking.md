@@ -113,11 +113,6 @@ Finalmente, la estrategia de defensa en profundidad debe completarse mediante la
 
 <img width="1726" height="911" alt="image" src="https://github.com/user-attachments/assets/a4e085a3-3693-4529-86b9-1e7af9730996" />
 
-# Azure Firewall - Notas de Clase
-
-## Objetivos de Aprendizaje
-Al finalizar esta clase, el estudiante será capaz de comprender los fundamentos de Azure Firewall y su diferenciación clave frente a un Network Security Group (NSG). Asimismo, dominará los conceptos detrás de la arquitectura Hub-and-Spoke, los mecanismos de creación de reglas de red, aplicación y NAT, y la implementación práctica del servicio mediante Azure CLI, permitiéndole analizar escenarios avanzados de enrutamiento y seguridad en la nube.
-
 ## ¿Qué es Azure Firewall?
 Azure Firewall es un servicio de seguridad administrado por Microsoft diseñado específicamente para proteger los recursos desplegados dentro de la plataforma de Azure. Al operar bajo el modelo de Firewall-as-a-Service (FWaaS), la responsabilidad de la infraestructura, la escalabilidad y la alta disponibilidad recae completamente en Microsoft, liberando a los administradores de tareas operativas complejas.
 
