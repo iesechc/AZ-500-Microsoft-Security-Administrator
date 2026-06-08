@@ -171,6 +171,14 @@ Azure Firewall es un servicio de seguridad administrado por Microsoft que proteg
 
 Es un Firewall-as-a-Service (FWaaS), lo que significa que Microsoft administra la infraestructura, escalabilidad y alta disponibilidad.
 
+<img width="827" height="562" alt="image" src="https://github.com/user-attachments/assets/1bf62401-a343-4982-968f-a4c3b435e64f" />
+
+<img width="741" height="515" alt="image" src="https://github.com/user-attachments/assets/d1537cc6-ad24-406e-b678-346f99da5c3f" />
+
+<img width="601" height="437" alt="image" src="https://github.com/user-attachments/assets/fc0a68d7-2806-46c1-bd83-10d6b3cba6d9" />
+
+
+
 Azure Firewall opera principalmente en las capas 3, 4 y 7 del modelo OSI:
 
 Capa	Función
@@ -441,75 +449,6 @@ DENY IMPLÍCITO
 
 Todo tráfico es bloqueado.
 
-Laboratorio Azure CLI
-Crear Resource Group
-az group create \
---name rg-firewall-demo \
---location eastus
-Crear VNet
-az network vnet create \
---resource-group rg-firewall-demo \
---name hub-vnet \
---address-prefix 10.0.0.0/16
-Crear Subnet AzureFirewallSubnet
-az network vnet subnet create \
---resource-group rg-firewall-demo \
---vnet-name hub-vnet \
---name AzureFirewallSubnet \
---address-prefix 10.0.1.0/24
-Crear IP Pública
-az network public-ip create \
---resource-group rg-firewall-demo \
---name firewall-pip \
---sku Standard
-Crear Firewall
-az network firewall create \
---resource-group rg-firewall-demo \
---name corp-firewall
-Asociar IP Pública
-az network firewall ip-config create \
---firewall-name corp-firewall \
---name fw-config \
---public-ip-address firewall-pip \
---resource-group rg-firewall-demo \
---vnet-name hub-vnet
-Crear Regla de Aplicación
-
-Permitir acceso a GitHub:
-
-az network firewall application-rule create \
---collection-name AllowGithub \
---firewall-name corp-firewall \
---name GithubRule \
---resource-group rg-firewall-demo \
---action Allow \
---priority 100 \
---protocols Http=80 Https=443 \
---source-addresses "*" \
---target-fqdns github.com
-Caso Real Empresarial
-
-Empresa:
-
-50 aplicaciones
-10 VNets
-500 máquinas virtuales
-
-Problema:
-
-Cada VNet tenía reglas diferentes.
-
-Solución:
-
-Hub-and-Spoke + Azure Firewall.
-
-Beneficios:
-
-Administración centralizada
-Auditoría simplificada
-Menor superficie de ataque
-Cumplimiento normativo
-Preguntas de Repaso
 ¿Cuál es la diferencia principal entre Azure Firewall y NSG?
 ¿Por qué son necesarias las UDR en una arquitectura Hub-and-Spoke?
 ¿Cuál es el orden correcto de evaluación de reglas?
