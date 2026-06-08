@@ -453,3 +453,119 @@ Todo tráfico es bloqueado.
 ¿Por qué son necesarias las UDR en una arquitectura Hub-and-Spoke?
 ¿Cuál es el orden correcto de evaluación de reglas?
 ¿Qué ventajas ofrece Azure Firewall Premium sobre Standard?
+
+**¿Cómo puedo conectar mis aplicaciones a servicios de Azure de forma privada y segura?**
+
+Azure ofrece tres herramientas principales para esto:
+1. **Service Endpoints** – la opción más sencilla
+2. **Private Endpoints** – mayor seguridad y flexibilidad
+3. **Private Link Services** – para exponer tus propios servicios de forma privada
+
+
+**¿Qué es un Service Endpoint?]**
+
+Imaginen que tienen una cuenta de Azure Storage con datos confidenciales. Por defecto, esa cuenta tiene una IP pública. Cualquiera que conozca esa IP —al menos en teoría— podría intentar acceder.
+
+Un **Service Endpoint** extiende la identidad de su red virtual hasta el servicio de Azure. El tráfico nunca sale a internet: viaja directamente por la red troncal (backbone) de Microsoft.
+
+Service Endpoints está disponible para una lista importante de servicios:
+- Azure Storage, Azure SQL Database, Cosmos DB, Key Vault
+- Service Bus, Event Hubs, App Service, y más
+
+Todos en disponibilidad general en todas las regiones de Azure.
+
+Limitaciones clave:
+- Solo funciona con el modelo Azure Resource Manager (no Classic)
+- Para Azure SQL: solo aplica en la misma región
+- No sirve para tráfico desde redes on-premises directamente
+- Máximo 200 combinaciones de suscripción/región por servicio
+
+**¿Qué es un Private Endpoint?]**
+
+Microsoft recomienda usar **Private Endpoints** sobre Service Endpoints para mayor seguridad.
+
+Un Private Endpoint es una **interfaz de red** dentro de su VNet que obtiene una IP privada. Esta interfaz se conecta directamente al servicio de Azure usando Azure Private Link.
+
+**Diferencia clave con Service Endpoints:** Con un Service Endpoint, el servicio sigue teniendo su IP pública; solo cambias la ruta. Con un Private Endpoint, el servicio obtiene una IP privada dentro de TU red. Es como traer el servicio dentro de tu VNet.
+
+Cuando crean un Private Endpoint definen:
+- **Nombre** único en el grupo de recursos
+- **Subred** donde se asignará la IP privada
+- **Recurso de Private Link** al que se conectará
+- **Método de aprobación:** automático o manual
+
+Los estados de conexión son: Pending → Approved → Rejected o Disconnected.
+
+
+**Consideraciones de red]**
+
+- La interfaz de red se crea automáticamente y es de solo lectura
+- La IP privada asignada NO cambia durante el ciclo de vida del endpoint
+- Soporta NSG (Network Security Groups), UDR (User Defined Routes) y ASG (Application Security Groups)
+- El Private Endpoint debe estar en la misma región y suscripción que la VNet
+
+**Regla de oro de DNS:** El DNS debe resolver el FQDN del servicio a la IP privada del endpoint. Si el DNS resuelve a la IP pública, el tráfico no pasará por el Private Endpoint. Usen Azure Private DNS Zones para esto.
+
+**¿Qué es Private Link Service?]**
+
+Hasta ahora hablamos de conectarse a servicios de Microsoft. Pero, ¿qué pasa si **ustedes son el proveedor** y quieren exponer su propio servicio de forma privada a sus clientes?
+l flujo es:
+1. Su servicio corre detrás de un **Standard Load Balancer**
+2. Crean el **Private Link Service** apuntando al Load Balancer
+3. Azure genera un **alias** único (Ej: `miservicio.{GUID}.eastus.azure.privatelinkservice`)
+4. Comparten el alias con sus clientes
+5. Los clientes crean un **Private Endpoint** usando ese alias
+
+Control de visibilidad y acceso]**
+
+Tienen tres opciones de visibilidad:
+- **Solo RBAC:** Para consumo interno entre VNets del mismo tenant
+- **Por suscripción:** Restringen acceso a suscripciones de confianza
+- **Cualquier persona con el alias:** Acceso público (requieren aprobación manual)
+
+Y dos modos de aprobación:
+- **Auto-approval:** Las suscripciones en la lista se aprueban automáticamente
+- **Manual:** El dueño del servicio aprueba cada solicitud
+
+**Limitaciones importantes:**
+- Solo funciona con Standard Load Balancer (no Basic)
+- Solo tráfico IPv4
+- Solo TCP y UDP
+- Timeout de ~5 minutos en idle
+
+
+VNet Integration en App Service]**
+
+Las aplicaciones en App Service viven en workers compartidos de Azure. Con **VNet Integration**, montamos interfaces virtuales en esos workers para que el tráfico saliente pueda llegar a recursos privados.
+
+> ⚠️ **Distinción crucial:** VNet Integration controla el tráfico **saliente** de la app. Para controlar tráfico **entrante** (quién puede llamar a la app), usan Private Endpoints o Access Restrictions.
+
+**Requisitos**
+
+- Tier: Basic, Standard, Premium v2/v3, o Elastic Premium
+- Requiere una **subred dedicada** delegada a App Service
+- Recomendación: `/26` (64 direcciones) para tener margen de escala
+- La app y la VNet deben estar en la **misma región**
+
+**Cálculo de IPs:**
+- 5 IPs reservadas por Azure en cualquier subred
+- 1 IP por instancia del App Service Plan
+- Al escalar, se duplican temporalmente las IPs necesarias
+
+**Tipos de routing]**
+
+Tres tipos de routing configurables:
+1. **Application Routing:** Qué tráfico de la app va por la VNet (todo o solo RFC1918/privado)
+2. **Configuration Routing:** Tráfico durante el arranque (container pull, Key Vault references)
+3. **Network Routing:** NSGs y UDRs aplicados a la subred de integración
+
+** Si su app usa referencias a Key Vault y el vault bloquea tráfico público, asegúrense de que el routing de configuración esté habilitado para que las secrets se resuelvan por la VNet.
+
+**¿Cuándo usar cada uno?]**
+
+Guía de decisión rápida:
+- **Service Endpoint** → Necesitan ruta privada simple y rápida; sin acceso desde on-premises; sin costo extra
+- **Private Endpoint** → Máxima seguridad; necesitan acceso desde on-premises o entre regiones; OK con costo adicional y configurar DNS
+- **Private Link Service** → Son el proveedor; quieren exponer su servicio privadamente a clientes externos
+- **VNet Integration** → Su app en App Service necesita alcanzar recursos privados en una VNet
+
